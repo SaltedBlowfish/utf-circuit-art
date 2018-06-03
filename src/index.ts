@@ -1,17 +1,102 @@
-import { randomValue } from "./helpers/object";
+import { randomValue } from "./helpers/array";
 
-export const elements = {
-  blank:        " ",
-  down:         "\u2502",
-  downAndRight: "\u2570",
-  left:         "\u2500",
-  node:         "O",
-  right:        "\u2500",
-  rightAndDown: "\u256E",
-  rightAndUp:   "\u256F",
-  up:           "\u2502",
-  upAndRight:   "\u256D",
-};
+//         0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+// U+250x  ─     │
+// U+256x                                         ╭  ╮  ╯
+// U+257x  ╰
+// ●
+
+export const elements = [
+  {
+    name: "blank",
+    rules: {
+      validUnless: {
+        cellAbove: ["vertical", "rightAndDown", "upAndRight"],
+        cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],
+      },
+    },
+    // space
+    value: " ",
+  },
+  {
+    name: "downAndRight",
+    rules: {
+      validUnless: {
+        cellAbove: ["horizontal", "downAndRight", "rightAndUp"],
+        cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],
+      },
+    },
+    // ╰
+    value: "\u2570",
+  },
+  {
+    name: "horizontal",
+    rules: {
+      validUnless: {
+        cellAbove: ["vertical", "rightAndDown", "upAndRight"],
+        cellToTheLeft: ["vertical", "blank", "rightAndDown", "rightAndUp"],
+      },
+    },
+    // ─
+    value: "\u2500",
+  },
+  {
+    name: "node",
+    rules: {
+      chance: 0.8,
+      validUnless: {
+        cellAbove: ["node"],
+        cellToTheLeft: ["node"],
+      },
+    },
+    // ●
+    value: "\u25CF",
+  },
+  {
+    name: "rightAndDown",
+    rules: {
+      validUnless: {
+        cellAbove: ["vertical", "rightAndDown", "upAndRight"],
+        cellToTheLeft: ["vertical", "rightAndDown", "rightAndUp"],
+      },
+    },
+    // ╮
+    value: "\u256E",
+  },
+  {
+    name: "rightAndUp",
+    rules:   {
+      validUnless: {
+        cellAbove: ["horizontal", "downAndRight", "rightAndUp"],
+        cellToTheLeft: ["vertical", "rightAndDown", "rightAndUp"],
+      },
+    },
+    // ╯
+    value: "\u256F",
+  },
+  {
+    name: "upAndRight",
+    rules: {
+      validUnless: {
+        cellAbove: ["vertical", "rightAndDown", "upAndRight"],
+        cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],
+      },
+    },
+    // ╭
+    value: "\u256D",
+  },
+  {
+    name: "vertical",
+    rules: {
+      validUnless: {
+        cellAbove: ["horizontal", "downAndRight", "rightAndUp"],
+        cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],
+      },
+    },
+    // │
+    value: "\u2502",
+  },
+];
 
 export const cellToTheLeft = (currentGrid, elementRow, elementColumn) => {
   return currentGrid[elementRow][elementColumn - 1];
@@ -20,10 +105,52 @@ export const cellToTheLeft = (currentGrid, elementRow, elementColumn) => {
 (window as any).cellToTheLeft = cellToTheLeft;
 
 export const cellAbove = (currentGrid, elementRow, elementColumn) => {
+  if (!currentGrid[elementRow - 1]) { return; }
   return currentGrid[elementRow - 1][elementColumn];
 };
 
 (window as any).cellAbove = cellAbove;
+
+export const characterBySymbol = (characterSymbol) => {
+  return elements.find((element) => characterSymbol === element.value);
+};
+
+export const allowedCharacters = (charAbove, charLeft) => {
+  const aboveDefinition = characterBySymbol(charAbove);
+  const leftDefinition = characterBySymbol(charLeft);
+
+  let aboveName;
+  let leftName;
+
+  if (!aboveDefinition) {
+    aboveName = "";
+  } else {
+    aboveName = aboveDefinition.name;
+  }
+  if (!leftDefinition) {
+    leftName = "";
+  } else {
+    leftName = leftDefinition.name;
+  }
+
+  return elements.filter(
+    (element) => {
+      if (element.rules.validUnless.cellAbove.indexOf(aboveName) > -1) {
+        return false;
+      }
+      if (element.rules.validUnless.cellToTheLeft.indexOf(leftName) > -1) {
+        return false;
+      }
+      if (
+        element.rules.chance !== undefined &&
+        Math.random() <= element.rules.chance
+      ) {
+        return false;
+      }
+      return true;
+    },
+  );
+};
 
 export const generate = (rows = 25, columns = 150) => {
   const output = [];
@@ -34,7 +161,12 @@ export const generate = (rows = 25, columns = 150) => {
 
     for (let column = 0; column < columns; column++) {
       if (!output[row][column]) { output[row].push([]); }
-      output[row][column] = randomValue(elements);
+
+      // TODO: Find the right character for this element
+      const above = cellAbove(output, row, column);
+      const left = cellToTheLeft(output, row, column);
+
+      output[row][column] = randomValue(allowedCharacters(above, left)).value;
     }
   }
 
@@ -54,18 +186,3 @@ const generated = generate();
 (window as any).generated = generated;
 
 console.log(generated);
-
-// O────╮    O────
-//      O╼╼╼╼╯
-//      │
-//      │
-//
-//         0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
-// U+250x  ─  ━  │  ┃  ┄  ┅  ┆  ┇  ┈  ┉  ┊  ┋  ┌  ┍  ┎  ┏
-// U+251x  ┐  ┑  ┒  ┓  └  ┕  ┖  ┗  ┘  ┙  ┚  ┛  ├  ┝  ┞  ┟
-// U+252x  ┠  ┡  ┢  ┣  ┤  ┥  ┦  ┧  ┨  ┩  ┪  ┫  ┬  ┭  ┮  ┯
-// U+253x  ┰  ┱  ┲  ┳  ┴  ┵  ┶  ┷  ┸  ┹  ┺  ┻  ┼  ┽  ┾  ┿
-// U+254x  ╀  ╁  ╂  ╃  ╄  ╅  ╆  ╇  ╈  ╉  ╊  ╋  ╌  ╍  ╎  ╏
-// U+255x  ═  ║  ╒  ╓  ╔  ╕  ╖  ╗  ╘  ╙  ╚  ╛  ╜  ╝  ╞  ╟
-// U+256x  ╠  ╡  ╢  ╣  ╤  ╥  ╦  ╧  ╨  ╩  ╪  ╫  ╬  ╭  ╮  ╯
-// U+257x  ╰  ╱  ╲  ╳  ╴  ╵  ╶  ╷  ╸  ╹  ╺  ╻  ╼  ╽  ╾  ╿
