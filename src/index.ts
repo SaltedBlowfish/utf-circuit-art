@@ -1,11 +1,5 @@
 import { randomValue } from "./helpers/array";
 
-//         0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
-// U+250x  ─     │
-// U+256x                                         ╭  ╮  ╯
-// U+257x  ╰
-// ●
-
 export const elements = [
   {
     name: "blank",
@@ -21,8 +15,9 @@ export const elements = [
   {
     name: "downAndRight",
     rules: {
+      density: 1,
       validUnless: {
-        cellAbove: ["horizontal", "downAndRight", "rightAndUp"],
+        cellAbove: ["blank", "horizontal", "downAndRight", "rightAndUp"],
         cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],
       },
     },
@@ -34,7 +29,7 @@ export const elements = [
     rules: {
       validUnless: {
         cellAbove: ["vertical", "rightAndDown", "upAndRight"],
-        cellToTheLeft: ["vertical", "blank", "rightAndDown", "rightAndUp"],
+        cellToTheLeft: ["blank", "vertical", "blank", "rightAndDown", "rightAndUp"],
       },
     },
     // ─
@@ -43,7 +38,7 @@ export const elements = [
   {
     name: "node",
     rules: {
-      chance: 0.8,
+      density: 0.1,
       validUnless: {
         cellAbove: ["node"],
         cellToTheLeft: ["node"],
@@ -55,9 +50,10 @@ export const elements = [
   {
     name: "rightAndDown",
     rules: {
+      density: 1,
       validUnless: {
         cellAbove: ["vertical", "rightAndDown", "upAndRight"],
-        cellToTheLeft: ["vertical", "rightAndDown", "rightAndUp"],
+        cellToTheLeft: ["blank", "vertical", "rightAndDown", "rightAndUp"],
       },
     },
     // ╮
@@ -66,9 +62,10 @@ export const elements = [
   {
     name: "rightAndUp",
     rules:   {
+      density: 1,
       validUnless: {
-        cellAbove: ["horizontal", "downAndRight", "rightAndUp"],
-        cellToTheLeft: ["vertical", "rightAndDown", "rightAndUp"],
+        cellAbove: ["blank", "horizontal", "downAndRight", "rightAndUp"],
+        cellToTheLeft: ["blank", "vertical", "rightAndDown", "rightAndUp"],
       },
     },
     // ╯
@@ -77,6 +74,7 @@ export const elements = [
   {
     name: "upAndRight",
     rules: {
+      density: 1,
       validUnless: {
         cellAbove: ["vertical", "rightAndDown", "upAndRight"],
         cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],
@@ -88,8 +86,9 @@ export const elements = [
   {
     name: "vertical",
     rules: {
+      density: 1,
       validUnless: {
-        cellAbove: ["horizontal", "downAndRight", "rightAndUp"],
+        cellAbove: ["blank", "horizontal", "downAndRight", "rightAndUp"],
         cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],
       },
     },
@@ -102,14 +101,10 @@ export const cellToTheLeft = (currentGrid, elementRow, elementColumn) => {
   return currentGrid[elementRow][elementColumn - 1];
 };
 
-(window as any).cellToTheLeft = cellToTheLeft;
-
 export const cellAbove = (currentGrid, elementRow, elementColumn) => {
   if (!currentGrid[elementRow - 1]) { return; }
   return currentGrid[elementRow - 1][elementColumn];
 };
-
-(window as any).cellAbove = cellAbove;
 
 export const characterBySymbol = (characterSymbol) => {
   return elements.find((element) => characterSymbol === element.value);
@@ -142,8 +137,8 @@ export const allowedCharacters = (charAbove, charLeft) => {
         return false;
       }
       if (
-        element.rules.chance !== undefined &&
-        Math.random() <= element.rules.chance
+        element.rules.density !== undefined &&
+        Math.random() >= element.rules.density
       ) {
         return false;
       }
@@ -152,21 +147,18 @@ export const allowedCharacters = (charAbove, charLeft) => {
   );
 };
 
-export const generate = (rows = 25, columns = 150) => {
+export const generate = (rows = 30, columns = 150) => {
   const output = [];
 
-  // for rows
   for (let row = 0; row < rows; row++) {
     if (!output[row]) { output.push([]); }
 
     for (let column = 0; column < columns; column++) {
       if (!output[row][column]) { output[row].push([]); }
-
-      // TODO: Find the right character for this element
       const above = cellAbove(output, row, column);
       const left = cellToTheLeft(output, row, column);
-
-      output[row][column] = randomValue(allowedCharacters(above, left)).value;
+      const characterForCell = randomValue(allowedCharacters(above, left));
+      output[row][column] = characterForCell ? characterForCell.value : " ";
     }
   }
 
@@ -179,10 +171,4 @@ export const generate = (rows = 25, columns = 150) => {
   return outputString;
 };
 
-const generated = generate();
-
-// Make `generate` function available on window
-(window as any).generate = generate;
-(window as any).generated = generated;
-
-console.log(generated);
+console.log(generate());
