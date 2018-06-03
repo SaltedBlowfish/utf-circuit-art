@@ -1,6 +1,7 @@
 import { randomValue } from "./helpers/object";
 
 export const elements = {
+  blank:        " ",
   down:         "\u2502",
   downAndRight: "\u2570",
   left:         "\u2500",
@@ -24,7 +25,7 @@ export const cellAbove = (currentGrid, elementRow, elementColumn) => {
 
 (window as any).cellAbove = cellAbove;
 
-export const generate = (rows = 10, columns = 20) => {
+export const generate = (rows = 25, columns = 150) => {
   const output = [];
 
   // for rows
