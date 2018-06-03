@@ -1,0 +1,19 @@
+{
+  "name": "ascii-circuit-art",
+  "version": "1.0.0",
+  "description": "ASCII circuit art generator",
+  "main": "dist/index.js",
+  "repository": "https://github.com/SaltedBlowfish/ascii-circuit-art",
+  "author": "Anthony Palazzetti <SaltedBlowfish@users.noreply.github.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "tslint 'src/**/*.ts'",
+    "develop": "parcel src/index.html",
+    "build": "parcel build src/index.ts"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.8.1",
+    "tslint": "^5.10.0",
+    "typescript": "^2.9.1"
+  }
+}
