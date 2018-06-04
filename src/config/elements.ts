@@ -1,6 +1,5 @@
 export default [
   {
-    edges: [],
     name: "blank",
     rules: {
       validUnless: {
@@ -12,10 +11,9 @@ export default [
     value: " ",
   },
   {
-    edges: ["top", "right"],
     name: "downAndRight",
     rules: {
-      density: 0.1,
+      chance: 0.1,
       validUnless: {
         cellAbove: ["blank", "horizontal", "downAndRight", "rightAndUp"],
         cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],
@@ -25,7 +23,6 @@ export default [
     value: "\u2570",
   },
   {
-    edges: ["left", "right"],
     name: "horizontal",
     rules: {
       validUnless: {
@@ -37,10 +34,9 @@ export default [
     value: "\u2500",
   },
   {
-    edges: [],
     name: "node",
     rules: {
-      density: 0.2,
+      chance: 0.2,
       validUnless: {
         cellAbove: ["node"],
         cellToTheLeft: ["node"],
@@ -50,10 +46,9 @@ export default [
     value: "\u25CF",
   },
   {
-    edges: ["left", "bottom"],
     name: "rightAndDown",
     rules: {
-      density: 0.1,
+      chance: 0.1,
       validUnless: {
         cellAbove: ["vertical", "rightAndDown", "upAndRight"],
         cellToTheLeft: ["blank", "vertical", "rightAndDown", "rightAndUp"],
@@ -63,10 +58,9 @@ export default [
     value: "\u256E",
   },
   {
-    edges: ["left", "top"],
     name: "rightAndUp",
     rules:   {
-      density: 0.1,
+      chance: 0.1,
       validUnless: {
         cellAbove: ["blank", "horizontal", "downAndRight", "rightAndUp"],
         cellToTheLeft: ["blank", "vertical", "rightAndDown", "rightAndUp"],
@@ -76,10 +70,9 @@ export default [
     value: "\u256F",
   },
   {
-    edges: ["bottom", "right"],
     name: "upAndRight",
     rules: {
-      density: 0.1,
+      chance: 0.1,
       validUnless: {
         cellAbove: ["vertical", "rightAndDown", "upAndRight"],
         cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],
@@ -89,10 +82,9 @@ export default [
     value: "\u256D",
   },
   {
-    edges: ["top", "bottom"],
     name: "vertical",
     rules: {
-      density: 0.1,
+      chance: 0.1,
       validUnless: {
         cellAbove: ["blank", "horizontal", "downAndRight", "rightAndUp"],
         cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],

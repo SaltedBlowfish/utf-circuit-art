@@ -1,45 +1,34 @@
 import elementsConfig from "./config/elements";
 import { randomValue } from "./helpers/array";
 import { cellAbove, cellToTheLeft } from "./helpers/cells";
+import { takeAChance } from "./helpers/numbers";
 
-export const characterBySymbol = (characterSymbol) => {
+const characterBySymbol = (characterSymbol) => {
   return elementsConfig.find((element) => characterSymbol === element.value);
 };
 
-export const allowedCharacters = (charAbove, charLeft) => {
+const applyElementRules = (element, aboveName, leftName) => {
+  const { rules } = element;
+
+  if (rules.validUnless.cellAbove.indexOf(aboveName) > -1) { return false; }
+  if (rules.validUnless.cellToTheLeft.indexOf(leftName) > -1) { return false; }
+  if (!isNaN(rules.chance) && !takeAChance(rules.chance)) { return false; }
+
+  return true;
+};
+
+const allowedCharacters = (charAbove, charLeft) => {
   const aboveDefinition = characterBySymbol(charAbove);
   const leftDefinition = characterBySymbol(charLeft);
 
-  let aboveName;
-  let leftName;
+  let aboveName = "";
+  let leftName = "";
 
-  if (!aboveDefinition) {
-    aboveName = "";
-  } else {
-    aboveName = aboveDefinition.name;
-  }
-  if (!leftDefinition) {
-    leftName = "";
-  } else {
-    leftName = leftDefinition.name;
-  }
+  if (aboveDefinition) { aboveName = aboveDefinition.name; }
+  if (leftDefinition) { leftName = leftDefinition.name; }
 
   return elementsConfig.filter(
-    (element) => {
-      if (element.rules.validUnless.cellAbove.indexOf(aboveName) > -1) {
-        return false;
-      }
-      if (element.rules.validUnless.cellToTheLeft.indexOf(leftName) > -1) {
-        return false;
-      }
-      if (
-        element.rules.density !== undefined &&
-        Math.random() >= element.rules.density
-      ) {
-        return false;
-      }
-      return true;
-    },
+    (element) => applyElementRules(element, aboveName, leftName),
   );
 };
 
