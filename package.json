@@ -1,9 +1,9 @@
 {
-  "name": "ascii-circuit-art",
+  "name": "utf-circuit-art",
   "version": "1.0.0",
-  "description": "ASCII circuit art generator",
+  "description": "UTF circuit art generator",
   "main": "dist/index.js",
-  "repository": "https://github.com/SaltedBlowfish/ascii-circuit-art",
+  "repository": "https://github.com/SaltedBlowfish/utf-circuit-art",
   "author": "Anthony Palazzetti <SaltedBlowfish@users.noreply.github.com>",
   "license": "MIT",
   "scripts": {
