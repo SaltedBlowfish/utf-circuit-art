@@ -1,101 +1,5 @@
+import elementsConfig from "./config/elements";
 import { randomValue } from "./helpers/array";
-
-export const elements = [
-  {
-    name: "blank",
-    rules: {
-      validUnless: {
-        cellAbove: ["vertical", "rightAndDown", "upAndRight"],
-        cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],
-      },
-    },
-    // space
-    value: " ",
-  },
-  {
-    name: "downAndRight",
-    rules: {
-      density: 1,
-      validUnless: {
-        cellAbove: ["blank", "horizontal", "downAndRight", "rightAndUp"],
-        cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],
-      },
-    },
-    // ╰
-    value: "\u2570",
-  },
-  {
-    name: "horizontal",
-    rules: {
-      validUnless: {
-        cellAbove: ["vertical", "rightAndDown", "upAndRight"],
-        cellToTheLeft: ["blank", "vertical", "blank", "rightAndDown", "rightAndUp"],
-      },
-    },
-    // ─
-    value: "\u2500",
-  },
-  {
-    name: "node",
-    rules: {
-      density: 0.1,
-      validUnless: {
-        cellAbove: ["node"],
-        cellToTheLeft: ["node"],
-      },
-    },
-    // ●
-    value: "\u25CF",
-  },
-  {
-    name: "rightAndDown",
-    rules: {
-      density: 1,
-      validUnless: {
-        cellAbove: ["vertical", "rightAndDown", "upAndRight"],
-        cellToTheLeft: ["blank", "vertical", "rightAndDown", "rightAndUp"],
-      },
-    },
-    // ╮
-    value: "\u256E",
-  },
-  {
-    name: "rightAndUp",
-    rules:   {
-      density: 1,
-      validUnless: {
-        cellAbove: ["blank", "horizontal", "downAndRight", "rightAndUp"],
-        cellToTheLeft: ["blank", "vertical", "rightAndDown", "rightAndUp"],
-      },
-    },
-    // ╯
-    value: "\u256F",
-  },
-  {
-    name: "upAndRight",
-    rules: {
-      density: 1,
-      validUnless: {
-        cellAbove: ["vertical", "rightAndDown", "upAndRight"],
-        cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],
-      },
-    },
-    // ╭
-    value: "\u256D",
-  },
-  {
-    name: "vertical",
-    rules: {
-      density: 1,
-      validUnless: {
-        cellAbove: ["blank", "horizontal", "downAndRight", "rightAndUp"],
-        cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],
-      },
-    },
-    // │
-    value: "\u2502",
-  },
-];
 
 export const cellToTheLeft = (currentGrid, elementRow, elementColumn) => {
   return currentGrid[elementRow][elementColumn - 1];
@@ -107,7 +11,7 @@ export const cellAbove = (currentGrid, elementRow, elementColumn) => {
 };
 
 export const characterBySymbol = (characterSymbol) => {
-  return elements.find((element) => characterSymbol === element.value);
+  return elementsConfig.find((element) => characterSymbol === element.value);
 };
 
 export const allowedCharacters = (charAbove, charLeft) => {
@@ -128,7 +32,7 @@ export const allowedCharacters = (charAbove, charLeft) => {
     leftName = leftDefinition.name;
   }
 
-  return elements.filter(
+  return elementsConfig.filter(
     (element) => {
       if (element.rules.validUnless.cellAbove.indexOf(aboveName) > -1) {
         return false;
@@ -147,7 +51,7 @@ export const allowedCharacters = (charAbove, charLeft) => {
   );
 };
 
-export const generate = (rows = 30, columns = 150) => {
+export const generate = (rows = 5, columns = 30) => {
   const output = [];
 
   for (let row = 0; row < rows; row++) {
@@ -170,5 +74,3 @@ export const generate = (rows = 30, columns = 150) => {
 
   return outputString;
 };
-
-console.log(generate());
