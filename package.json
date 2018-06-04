@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "tslint 'src/**/*.ts'",
-    "develop": "parcel src/index.html",
+    "develop": "parcel src/index.html -d temp",
     "build": "parcel build src/index.ts"
   },
   "devDependencies": {

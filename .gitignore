@@ -1,5 +1,5 @@
 .cache
 .DS_Store
-dist
+temp
 node_modules
 .env
