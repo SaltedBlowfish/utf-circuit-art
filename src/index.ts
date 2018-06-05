@@ -47,7 +47,6 @@ const allowedCharacters = (charAbove, charLeft, options) => {
 };
 
 export default {
-  version,
   generate: (options = {}) => {
     const output = [];
     const mergedOptions = Object.assign({}, defaultOptions, options);
@@ -74,4 +73,5 @@ export default {
 
     return outputString;
   },
+  version,
 };
