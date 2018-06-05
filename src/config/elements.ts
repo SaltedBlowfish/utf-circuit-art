@@ -13,7 +13,6 @@ export default [
   {
     name: "downAndRight",
     rules: {
-      chance: 0.1,
       validUnless: {
         cellAbove: ["blank", "horizontal", "downAndRight", "rightAndUp"],
         cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],
@@ -36,7 +35,6 @@ export default [
   {
     name: "node",
     rules: {
-      chance: 0.2,
       validUnless: {
         cellAbove: ["node"],
         cellToTheLeft: ["node"],
@@ -48,7 +46,6 @@ export default [
   {
     name: "rightAndDown",
     rules: {
-      chance: 0.1,
       validUnless: {
         cellAbove: ["vertical", "rightAndDown", "upAndRight"],
         cellToTheLeft: ["blank", "vertical", "rightAndDown", "rightAndUp"],
@@ -60,7 +57,6 @@ export default [
   {
     name: "rightAndUp",
     rules:   {
-      chance: 0.1,
       validUnless: {
         cellAbove: ["blank", "horizontal", "downAndRight", "rightAndUp"],
         cellToTheLeft: ["blank", "vertical", "rightAndDown", "rightAndUp"],
@@ -72,7 +68,6 @@ export default [
   {
     name: "upAndRight",
     rules: {
-      chance: 0.1,
       validUnless: {
         cellAbove: ["vertical", "rightAndDown", "upAndRight"],
         cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],
@@ -84,7 +79,6 @@ export default [
   {
     name: "vertical",
     rules: {
-      chance: 0.1,
       validUnless: {
         cellAbove: ["blank", "horizontal", "downAndRight", "rightAndUp"],
         cellToTheLeft: ["horizontal", "downAndRight", "upAndRight"],
