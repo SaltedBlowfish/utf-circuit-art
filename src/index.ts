@@ -1,4 +1,5 @@
 import elementsConfig from "./config/elements";
+import version from "./config/version";
 import { randomValue } from "./helpers/array";
 import { cellAbove, cellToTheLeft } from "./helpers/cells";
 import { takeAChance } from "./helpers/numbers";
@@ -45,31 +46,32 @@ const allowedCharacters = (charAbove, charLeft, options) => {
   );
 };
 
-export const generate = (options = {}) => {
-  const output = [];
-  console.log(options);
-  const mergedOptions = Object.assign({}, defaultOptions, options);
-  console.log(mergedOptions);
+export default {
+  version,
+  generate: (options = {}) => {
+    const output = [];
+    const mergedOptions = Object.assign({}, defaultOptions, options);
 
-  for (let row = 0; row < mergedOptions.rows; row++) {
-    if (!output[row]) { output.push([]); }
+    for (let row = 0; row < mergedOptions.rows; row++) {
+      if (!output[row]) { output.push([]); }
 
-    for (let column = 0; column < mergedOptions.columns; column++) {
-      if (!output[row][column]) { output[row].push([]); }
-      const above = cellAbove(output, row, column);
-      const left = cellToTheLeft(output, row, column);
-      const characterForCell = randomValue(
-        allowedCharacters(above, left, mergedOptions),
-      );
-      output[row][column] = characterForCell ? characterForCell.value : " ";
+      for (let column = 0; column < mergedOptions.columns; column++) {
+        if (!output[row][column]) { output[row].push([]); }
+        const above = cellAbove(output, row, column);
+        const left = cellToTheLeft(output, row, column);
+        const characterForCell = randomValue(
+          allowedCharacters(above, left, mergedOptions),
+        );
+        output[row][column] = characterForCell ? characterForCell.value : " ";
+      }
     }
-  }
 
-  let outputString = "";
+    let outputString = "";
 
-  for (const row of output) {
-    outputString += row.join("") + "\n";
-  }
+    for (const row of output) {
+      outputString += row.join("") + "\n";
+    }
 
-  return outputString;
+    return outputString;
+  },
 };
