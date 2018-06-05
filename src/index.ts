@@ -5,11 +5,13 @@ import { takeAChance } from "./helpers/numbers";
 
 const defaultOptions = {
   blank: { chance: 1 },
+  columns: 30,
   downAndRight: { chance: 1 },
   horizontal: { chance: 1 },
   node: { chance: 1 },
   rightAndDown: { chance: 1 },
   rightAndUp: { chance: 1 },
+  rows: 5,
   upAndRight: { chance: 1 },
   vertical: { chance: 1 },
 };
@@ -43,18 +45,21 @@ const allowedCharacters = (charAbove, charLeft, options) => {
   );
 };
 
-export const generate = (rows = 5, columns = 30, options = defaultOptions) => {
+export const generate = (options = {}) => {
   const output = [];
+  console.log(options);
+  const mergedOptions = Object.assign({}, defaultOptions, options);
+  console.log(mergedOptions);
 
-  for (let row = 0; row < rows; row++) {
+  for (let row = 0; row < mergedOptions.rows; row++) {
     if (!output[row]) { output.push([]); }
 
-    for (let column = 0; column < columns; column++) {
+    for (let column = 0; column < mergedOptions.columns; column++) {
       if (!output[row][column]) { output[row].push([]); }
       const above = cellAbove(output, row, column);
       const left = cellToTheLeft(output, row, column);
       const characterForCell = randomValue(
-        allowedCharacters(above, left, options),
+        allowedCharacters(above, left, mergedOptions),
       );
       output[row][column] = characterForCell ? characterForCell.value : " ";
     }
