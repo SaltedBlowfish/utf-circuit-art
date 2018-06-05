@@ -3,9 +3,19 @@
   "version": "1.0.0",
   "description": "UTF circuit art generator",
   "main": "dist/index.js",
-  "repository": "https://github.com/SaltedBlowfish/utf-circuit-art",
-  "author": "Anthony Palazzetti <SaltedBlowfish@users.noreply.github.com>",
+  "author": "<SaltedBlowfish@users.noreply.github.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SaltedBlowfish/utf-circuit-art.git"
+  },
+  "keywords": [
+    "circuit",
+    "ascii",
+    "utf",
+    "art",
+    "network"
+  ],
   "scripts": {
     "lint": "tslint 'src/**/*.ts'",
     "develop": "parcel src/index.html -d temp",
