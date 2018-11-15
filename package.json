@@ -1,6 +1,6 @@
 {
   "name": "utf-circuit-art",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "UTF circuit art generator",
   "main": "dist/index.js",
   "author": "<SaltedBlowfish@users.noreply.github.com>",
