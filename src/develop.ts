@@ -1,4 +1,4 @@
-import circuitArt from "./index";
+import * as circuitArt from "./index";
 
 (window as any).circuitArt = circuitArt;
 
