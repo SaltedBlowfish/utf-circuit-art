@@ -26,7 +26,7 @@ or
 ## Usage
 
 ```
-import * as circuitArt from "./index";
+const circuitArt = require("utf-circuit-art");
 
 ...
 
